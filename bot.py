@@ -3,12 +3,13 @@
 
 import urllib2, json
 import sys
+import time
+
 
 class TelegramBot:
 
-	def __init__(self, api_key, last_message = None):
+	def __init__(self, api_key):
 		self.api_key = api_key
-		self.last_message = last_message
 
 	def start(self):
 		while True:
@@ -16,8 +17,8 @@ class TelegramBot:
 			if messages:
 				self.last_message = messages[len(messages)-1]['update_id']
 			for message in messages:
-				self.send_response( messages )
-			break
+				self.send_response( message )
+			time.sleep(3)
 
 	def get_messages(self):
 		messages_url = self.updates_urls()
@@ -25,13 +26,19 @@ class TelegramBot:
 		return messages['result']
 
 	def send_response(self, message):
-		print message
+		response_text = self.response_for( message['message']['text'] )
+		chat_id = message['message']['chat']['id']
+		url = "https://api.telegram.org/bot%s/sendMessage" % self.api_key
+		query = self.url_query( chat_id=chat_id, text=response_text )
+		self.access_url( url+query )
+
+	def response_for(self, text):
+		if text == '/start' or text == '/help':
+			return 'Seja bem vindo meu caro querido S2. Digite o nome do campeonato para obter informações'
+		return 'Estamos trabalhando para poder lhe ajudar.\nEnquanto isso você poder capinar um lote'
 
 	def updates_urls(self):
-		url = "https://api.telegram.org/bot%s/getUpdates" % self.api_key
-		off_set = self.last_message + 1 if self.last_message else self.last_message
-		query = self.url_query( offset=off_set )
-		return url + query
+		return "https://api.telegram.org/bot%s/getUpdates" % self.api_key
 
 	def url_query(self, **kwargs):
 		query = ''
@@ -39,7 +46,7 @@ class TelegramBot:
 			if key and value:
 				if query:
 					query += '&'
-				query += key + '=' + value
+				query += key + '=' + urllib2.quote(str(value))
 		return '?' + query if query else ''
 
 	def get_json(self, url):
