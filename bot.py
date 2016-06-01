@@ -29,8 +29,11 @@ class TelegramBot:
 		return messages['result']
 
 	def send_response(self, message):
-		self.log( "%s [%s] says: %s" % ( message['from']['first_name'], message['from']['username'], message['text'] ) )
-		response_text = self.response_for( message['text'] )
+		text = message['text'].encode('utf8')
+		username = message['from']['username'].encode('utf8')
+		user_first_name = message['from']['first_name'].encode('utf8')
+		self.log( "%s [%s] says: %s" % ( user_first_name, username, text ) )
+		response_text = self.response_for( text )
 		chat_id = message['chat']['id']
 		url = "https://api.telegram.org/bot%s/sendMessage" % self.api_key
 		self.access_url( url, chat_id=chat_id, text=response_text  )
@@ -79,7 +82,7 @@ class TelegramBot:
 			lista_campeonatos = dados['championships']
 			self.campeonatos = {}
 			for campeonato in lista_campeonatos:
-				nome = self.formatar_nome_campeonato( campeonato['name'] )
+				nome = self.formatar_nome_campeonato( campeonato['name'].encode('utf-8') )
 				self.campeonatos[ nome ] = campeonato
 		except Exception as e:
 			self.campeonatos = None
