@@ -29,11 +29,11 @@ class TelegramBot:
 		seconds_without_messages = self.last_update_time - time.time()
 		if seconds_without_messages < 10:
 			time.sleep(2)
-		if seconds_without_messages < 60:
+		elif seconds_without_messages < 60:
 			time.sleep(5)
-		else if seconds_without_messages < (60 * 10):
+		elif seconds_without_messages < (60 * 10):
 			time.sleep(20)
-		else if seconds_without_messages < (60 * 30):
+		elif seconds_without_messages < (60 * 30):
 			time.sleep(60)
 		else
 			time.sleep(60*5)
