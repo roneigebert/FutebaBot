@@ -11,6 +11,7 @@ class TelegramBot:
 	def __init__(self, api_key, last_update_id):
 		self.api_key = api_key
 		self.last_update_id = last_update_id
+		self.last_update_time = time.time()
 		self.campeonatos = None
 		self.proxies = {}
 
@@ -19,9 +20,23 @@ class TelegramBot:
 			messages = self.get_messages()
 			if messages:
 				self.last_update_id = messages[len(messages)-1]['update_id']
+				self.last_update_time = time.time()
 			for message in messages:
 				self.send_response( message['message'] )
+			self.sleep_by_movment()
+
+	def sleep_by_movment(self):
+		seconds_without_messages = self.last_update_time - time.time()
+		if seconds_without_messages < 10:
+			time.sleep(2)
+		if seconds_without_messages < 60:
 			time.sleep(5)
+		else if seconds_without_messages < (60 * 10):
+			time.sleep(20)
+		else if seconds_without_messages < (60 * 30):
+			time.sleep(60)
+		else
+			time.sleep(60*5)
 
 	def get_messages(self):
 		url = "https://api.telegram.org/bot%s/getUpdates" % self.api_key
