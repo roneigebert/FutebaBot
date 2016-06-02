@@ -26,16 +26,16 @@ class TelegramBot:
 			self.sleep_by_movment()
 
 	def sleep_by_movment(self):
-		seconds_without_messages = self.last_update_time - time.time()
-		if seconds_without_messages < 10:
+		seconds_without_messages = time.time() - self.last_update_time
+		if seconds_without_messages < 20:
 			time.sleep(2)
 		elif seconds_without_messages < 60:
 			time.sleep(5)
 		elif seconds_without_messages < (60 * 10):
-			time.sleep(20)
-		elif seconds_without_messages < (60 * 30):
+			self.log( 'Waiting 1 minute to receive mesages...' )
 			time.sleep(60)
 		else:
+			self.log( 'Waiting 5 minute to receive mesages...' )
 			time.sleep(60*5)
 
 	def get_messages(self):
