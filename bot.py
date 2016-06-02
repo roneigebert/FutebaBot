@@ -33,10 +33,10 @@ class TelegramBot:
 			time.sleep(5)
 		elif seconds_without_messages < (60 * 10):
 			self.log( 'Waiting 1 minute to receive mesages...' )
-			time.sleep(60)
+			time.sleep(30)
 		else:
 			self.log( 'Waiting 5 minute to receive mesages...' )
-			time.sleep(60*5)
+			time.sleep(60)
 
 	def get_messages(self):
 		url = "https://api.telegram.org/bot%s/getUpdates" % self.api_key
