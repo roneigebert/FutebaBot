@@ -35,7 +35,7 @@ class TelegramBot:
 			time.sleep(20)
 		elif seconds_without_messages < (60 * 30):
 			time.sleep(60)
-		else
+		else:
 			time.sleep(60*5)
 
 	def get_messages(self):
