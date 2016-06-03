@@ -45,8 +45,9 @@ class TelegramBot:
 
 	def send_response(self, message):
 		text = message['text'].encode('utf8')
-		username = message['from']['username'].encode('utf8')
-		user_first_name = message['from']['first_name'].encode('utf8')
+		from_user = message['from']
+                username = from_user['username'].encode('utf8') if 'username' in from_user else from_user['first_name'].encode('utf8')
+		user_first_name = from_user['first_name'].encode('utf8')
 		self.log( "%s [%s] says: %s" % ( user_first_name, username, text ) )
 		response_text = self.response_for( text )
 		chat_id = message['chat']['id']
